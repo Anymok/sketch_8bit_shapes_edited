@@ -8,7 +8,8 @@ int startingX;
 int startingY;
 int shots = 8192; //max is 8192
 int lineSize = 1;
-Boolean simulate = true; // true for simulated data. false for real data
+Boolean simulate = false; // true for simulated data. false for real data
+String[] fakeArray = {"101111101"};
 
 int shapeSize = 80;
 int startingPosition = 700; //there are 8000 shots and this piece only uses 36. This shifts the starting point to use those other shots to make new compositions
@@ -27,6 +28,7 @@ void setup() {
   if (simulate) {
     createReadings();
   }
+    
   ;
   background(black);
   noFill();
@@ -42,10 +44,14 @@ void setup() {
     float t = map(i, startingPosition, 36 + startingPosition - 1, 0, 1); // interpolation entre 0 et 1
     color shapeColor = lerpColor(red, blue, t);
     stroke(shapeColor);
-    drawLine(finalQuantumArray[i]);
+     if (simulate) {
+        drawLine(finalQuantumArray[i]);
+    } else {
+        drawLine(fakeArray[0]);
+    }
   }
 }
- //<>//
+
 void createReadings() {
   Simulator simulator = new Simulator(0.1);
   
@@ -64,17 +70,15 @@ void createReadings() {
     measurements.add(firstKey);
   }
   finalQuantumArray = measurements.toArray(new String[0]);
-} //<>//
+}
 
 void drawLine(String n) {
   
   char qb[] = new char[bitstringLength];
   
-  //println(n.charAt(0));
   if (!simulate) {
     for (int i = 0; i < qb.length; i ++) {
-      qb[i] = n.charAt(i+1); //there is an extra character in the real data 
-      //println(qb[i]);
+      qb[i] = n.charAt(i); 
     }
   } else {
     for (int i = 0; i < qb.length; i ++) {
